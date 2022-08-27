@@ -1,40 +1,24 @@
 # Put your app in here.
 from flask import Flask, request
 
-import operations
+from operations import add, sub, mult, div
 
 app = Flask(__name__)
 
-from operations import add, sub, mult, div
+@app.route("/<func>")
+def route(func):
+    print(request.args)
 
-@app.route("/add")
-def add_route():
-    a = request.args["a"]
-    b = request.args["b"]
+    a = int(request.args["a"])
+    b = int(request.args["b"])
 
-    result = add(int(a),int(b))
-    return str(result)
+    functions = {
+        "add": add(a,b),
+        "sub": sub(a,b),
+        "mult": mult(a,b),
+        "div": div(a,b)
+    }
 
-@app.route("/sub")
-def sub_route():
-    a = request.args["a"]
-    b = request.args["b"]
+    result = functions[func]
 
-    result = sub(int(a),int(b))
-    return str(result)
-
-@app.route("/mult")
-def mult_route():
-    a = request.args["a"]
-    b = request.args["b"]
-
-    result = mult(int(a),int(b))
-    return str(result)
-
-@app.route("/div")
-def div_route():
-    a = request.args["a"]
-    b = request.args["b"]
-
-    result = div(int(a),int(b))
-    return str(result)
+    return f"RESULT: {result}"
